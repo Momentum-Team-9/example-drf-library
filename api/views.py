@@ -1,8 +1,7 @@
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-
-from .models import Book
+from .models import Book, BookRecord
 from .serializers import BookSerializer, BookRecordSerializer
 
 
@@ -18,7 +17,7 @@ class BookViewSet(ModelViewSet):
 
 
 class BookRecordViewSet(ModelViewSet):
-    queryset = Book.objects.all()
+    queryset = BookRecord.objects.all()
     serializer_class = BookRecordSerializer
 
     def get_queryset(self):
