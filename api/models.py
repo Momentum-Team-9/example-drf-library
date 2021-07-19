@@ -55,9 +55,7 @@ class BookRecord(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def __repr__(self):
-        return (
-            f"<BookRecord pk={self.pk} user_pk={self.user.pk} book_pk={self.book.pk}>"
-        )
+        return f"<BookRecord pk={self.pk} reader_pk={self.reader.pk} book_pk={self.book.pk}>"
 
     def __str__(self):
-        return f"{self.user.username} {self.reading_state}: {self.book.title}"
+        return f"{self.reader.username} {self.reading_state}: {self.book.title}"
