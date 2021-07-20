@@ -1,3 +1,4 @@
+from rest_framework import permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -8,6 +9,7 @@ from .serializers import BookSerializer, BookRecordSerializer
 class BookViewSet(ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     @action(detail=False)
     def featured(self, request):

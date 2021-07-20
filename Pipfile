@@ -10,6 +10,7 @@ django-extensions = "*"
 werkzeug = "*"
 django-environ = "*"
 django-on-heroku = "*"
+djoser = "*"
 
 [dev-packages]
 black = "*"
