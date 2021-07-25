@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import environ
+import django_on_heroku
 
 env = environ.Env(
     # set casting, default value
@@ -135,8 +136,6 @@ STATIC_URL = "/static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "api.User"
-
-import django_on_heroku
 
 django_on_heroku.settings(locals())
 del DATABASES["default"]["OPTIONS"]["sslmode"]
