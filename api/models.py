@@ -59,3 +59,19 @@ class BookRecord(models.Model):
 
     def __str__(self):
         return f"{self.reader.username} {self.reading_state}: {self.book.title}"
+
+
+class BookReview(models.Model):
+    body = models.TextField()
+    book = models.ForeignKey(to="Book", on_delete=models.CASCADE)
+    reviewed_by = models.ForeignKey(
+        to="User", on_delete=models.SET_NULL, blank=True, null=True
+    )
+
+    def __repr__(self):
+        return (
+            f"<BookReview pk={self.pk} book={self.book} reviewed_by={self.reviewed_by}>"
+        )
+
+    def __str__(self):
+        return f"Review of {self.book.title}"
