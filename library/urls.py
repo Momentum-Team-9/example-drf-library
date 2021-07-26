@@ -25,6 +25,7 @@ router.register(
     api_views.BookRecordViewSet,
     basename="book_records",
 )
+router.register("book_reviews", api_views.BookReviewViewSet, basename="book_reviews")
 urlpatterns = router.urls
 
 urlpatterns += [
