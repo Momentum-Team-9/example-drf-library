@@ -30,3 +30,11 @@ class BookReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookReview
         fields = ("pk", "body", "book", "reviewed_by")
+
+
+class UserSerializer(serializers.ModelSerializer):
+    photo = serializers.ImageField()
+
+    class Meta:
+        model = User
+        fields = ["pk", "username", "photo"]

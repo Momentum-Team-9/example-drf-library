@@ -14,6 +14,9 @@ djoser = "*"
 django-cors-headers = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
+pillow = "*"
+boto3 = "*"
+django-storages = "*"
 
 [dev-packages]
 black = "*"

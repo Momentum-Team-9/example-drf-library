@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from api import views as api_views
 from rest_framework.routers import DefaultRouter
 
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register("books", api_views.BookViewSet, basename="books")
 router.register(
     "book_records",
@@ -26,10 +28,11 @@ router.register(
     basename="book_records",
 )
 router.register("book_reviews", api_views.BookReviewViewSet, basename="book_reviews")
+router.register("auth/users", api_views.UserViewSet)
 urlpatterns = router.urls
 
 urlpatterns += [
-    path("auth/", include("djoser.urls")),
+    # path("", include(router.urls)),
     path("auth/", include("djoser.urls.authtoken")),
     path("admin/", admin.site.urls),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

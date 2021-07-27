@@ -1,9 +1,15 @@
+from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied, ParseError
+from rest_framework.generics import (
+    get_object_or_404
+)
+from rest_framework.parsers import JSONParser, FileUploadParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from .models import Book, BookRecord, BookReview
-from .serializers import BookSerializer, BookRecordSerializer, BookReviewSerializer
+from .models import Book, BookRecord, BookReview, User
+from .serializers import BookSerializer, BookRecordSerializer, BookReviewSerializer, UserSerializer
 
 
 class BookViewSet(ModelViewSet):
@@ -38,3 +44,34 @@ class BookReviewViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+class UserViewSet(DjoserUserViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    parser_classes = [FileUploadParser, JSONParser]
+
+    @action(detail=True, methods=["put", "patch"])
+    def photo(self, request, id=None):
+        if "file" not in request.data:
+            raise ParseError("Missing file attachment")
+
+        file = request.data["file"]
+        user = self.get_object()
+
+        user.photo.save(file.name, file, save=True)
+
+        serializer = self.get_serializer(user)
+        return Response(serializer.data, status=201)
+
+    def get_object(self):
+        user_instance = get_object_or_404(self.get_queryset(), pk=self.kwargs["id"])
+        if self.request.user.pk != user_instance.pk:
+            raise PermissionDenied()
+        return user_instance
+
+    def get_parser_classes(self):
+        if "file" in self.request.data:
+            return [FileUploadParser]
+
+        return [JSONParser]
