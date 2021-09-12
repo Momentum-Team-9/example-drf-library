@@ -29,10 +29,9 @@ router.register(
 )
 router.register("book_reviews", api_views.BookReviewViewSet, basename="book_reviews")
 router.register("auth/users", api_views.UserViewSet)
-urlpatterns = router.urls
 
-urlpatterns += [
-    # path("", include(router.urls)),
+urlpatterns = [
+    path("api/", include(router.urls)),
     path("auth/", include("djoser.urls.authtoken")),
     path("admin/", admin.site.urls),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

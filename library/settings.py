@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "djoser",
-    'storages',
+    "storages",
     "api",
 ]
 
@@ -158,7 +158,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.TokenAuthentication",
     ),
-        "DEFAULT_PERMISSION_CLASSES": [
+    "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticatedOrReadOnly"
     ],
 }
@@ -175,6 +175,7 @@ if env("USE_S3"):
         "CacheControl": "max-age=86400",
     }
     AWS_DEFAULT_ACL = "public-read"
+    AWS_LOCATION = "static"
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
     # To allow django-admin collectstatic to automatically put your static files in your bucket
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings

@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ("title", "author", "publication_year", "featured")
+        fields = ("pk", "title", "author", "publication_year", "featured")
 
 
 class BookRecordSerializer(serializers.ModelSerializer):

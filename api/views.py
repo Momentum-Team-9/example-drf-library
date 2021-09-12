@@ -2,14 +2,17 @@ from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied, ParseError
-from rest_framework.generics import (
-    get_object_or_404
-)
+from rest_framework.generics import get_object_or_404
 from rest_framework.parsers import JSONParser, FileUploadParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from .models import Book, BookRecord, BookReview, User
-from .serializers import BookSerializer, BookRecordSerializer, BookReviewSerializer, UserSerializer
+from .serializers import (
+    BookSerializer,
+    BookRecordSerializer,
+    BookReviewSerializer,
+    UserSerializer,
+)
 
 
 class BookViewSet(ModelViewSet):
@@ -58,7 +61,6 @@ class UserViewSet(DjoserUserViewSet):
 
         file = request.data["file"]
         user = self.get_object()
-
         user.photo.save(file.name, file, save=True)
 
         serializer = self.get_serializer(user)
