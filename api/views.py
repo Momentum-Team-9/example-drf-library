@@ -1,5 +1,5 @@
 from djoser.views import UserViewSet as DjoserUserViewSet
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied, ParseError
 from rest_framework.generics import get_object_or_404
@@ -14,12 +14,17 @@ from .serializers import (
     BookReviewSerializer,
     UserSerializer,
 )
+from .custom_permissions import (
+    IsAdminOrReadOnly,
+    IsReaderOrReadOnly,
+    IsReviewerOrReadOnly,
+)
 
 
 class BookViewSet(ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookDetailSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
 
     def get_serializer_class(self):
         if self.action in ["list"]:
@@ -36,7 +41,7 @@ class BookViewSet(ModelViewSet):
 class BookRecordViewSet(ModelViewSet):
     queryset = BookRecord.objects.all()
     serializer_class = BookRecordSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsReaderOrReadOnly]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -48,7 +53,7 @@ class BookRecordViewSet(ModelViewSet):
 
 class BookReviewViewSet(ModelViewSet):
     serializer_class = BookReviewSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsReviewerOrReadOnly]
     queryset = BookReview.objects.all()
 
     def perform_create(self, serializer):
@@ -74,7 +79,7 @@ class UserViewSet(DjoserUserViewSet):
 
     def get_object(self):
         user_instance = get_object_or_404(self.get_queryset(), pk=self.kwargs["id"])
-        if self.request.user.pk != user_instance.pk:
+        if self.request.user is not user_instance:
             raise PermissionDenied()
         return user_instance
 
