@@ -63,7 +63,9 @@ class BookRecord(models.Model):
 
 class BookReview(models.Model):
     body = models.TextField()
-    book = models.ForeignKey(to="Book", on_delete=models.CASCADE)
+    book = models.ForeignKey(
+        to="Book", on_delete=models.CASCADE, related_name="reviews"
+    )
     reviewed_by = models.ForeignKey(
         to="User", on_delete=models.SET_NULL, blank=True, null=True
     )
