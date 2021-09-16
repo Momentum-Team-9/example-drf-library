@@ -12,6 +12,7 @@ from .serializers import (
     BookDetailSerializer,
     BookRecordSerializer,
     BookReviewSerializer,
+    UserCreateSerializer,
     UserSerializer,
 )
 from .custom_permissions import (
@@ -73,8 +74,8 @@ class BookReviewListCreateView(ListCreateAPIView):
 
 class UserViewSet(DjoserUserViewSet):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
-    parser_classes = [FileUploadParser, JSONParser]
+    serlializer_class = UserCreateSerializer
+    parser_classes = [JSONParser, FileUploadParser]
 
     @action(detail=True, methods=["put", "patch"])
     def photo(self, request, id=None):
@@ -99,3 +100,8 @@ class UserViewSet(DjoserUserViewSet):
             return [FileUploadParser]
 
         return [JSONParser]
+
+    def get_serializer_class(self):
+        if self.request.method in ["PUT", "PATCH"]:
+            return UserSerializer
+        return super().get_serializer_class()
