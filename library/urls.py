@@ -22,16 +22,20 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter(trailing_slash=False)
 router.register("books", api_views.BookViewSet, basename="books")
-router.register(
-    "book_records",
-    api_views.BookRecordViewSet,
-    basename="book_records",
-)
-router.register("book_reviews", api_views.BookReviewViewSet, basename="book_reviews")
 router.register("auth/users", api_views.UserViewSet)
 
 urlpatterns = [
     path("api/", include(router.urls)),
+    path(
+        "api/books/<int:book_pk>/reviews",
+        api_views.BookReviewListCreateView.as_view(),
+        name="book_reviews",
+    ),
+    path(
+        "api/books/<int:book_pk>/book_records/",
+        api_views.BookRecordCreateView.as_view(),
+        name="book_record_create",
+    ),
     path("auth/", include("djoser.urls.authtoken")),
     path("admin/", admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -2,7 +2,7 @@ from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied, ParseError
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import CreateAPIView, ListCreateAPIView, get_object_or_404
 from rest_framework.parsers import JSONParser, FileUploadParser
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -22,7 +22,7 @@ from .custom_permissions import (
 
 
 class BookViewSet(ModelViewSet):
-    queryset = Book.objects.all()
+    queryset = Book.objects.all().order_by("title")
     serializer_class = BookDetailSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
 
@@ -51,13 +51,24 @@ class BookRecordViewSet(ModelViewSet):
         serializer.save(reader=self.request.user)
 
 
-class BookReviewViewSet(ModelViewSet):
-    serializer_class = BookReviewSerializer
-    permission_classes = [IsAuthenticated, IsReviewerOrReadOnly]
-    queryset = BookReview.objects.all()
+class BookRecordCreateView(CreateAPIView):
+    pass
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+
+class BookReviewListCreateView(ListCreateAPIView):
+    serializer_class = BookReviewSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        book = get_object_or_404(
+            Book,
+            pk=self.kwargs["book_pk"],
+        )
+        return book.reviews.all()
+
+    def perform_create(self, serializer, **kwargs):
+        book = get_object_or_404(Book, pk=self.kwargs["book_pk"])
+        serializer.save(reviewed_by=self.request.user, book=book)
 
 
 class UserViewSet(DjoserUserViewSet):

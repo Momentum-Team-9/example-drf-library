@@ -146,6 +146,7 @@ POST api/books
 
 ```json
 201 Created
+
 {
   "pk": 6,
   "title": "The Anatomy of Melancholy",
@@ -185,4 +186,62 @@ PATCH api/books/{id}
   "featured": true,
   "reviews": []
 }
+```
+
+## Get all reviews for a single book
+
+Requires authentication.
+
+### request
+
+```txt
+GET api/books/{id}/reviews
+
+```
+
+### response
+
+```json
+
+[
+  {
+    "pk": 1,
+    "body": "Satan is a compelling hero.",
+    "book": "Paradise Lost",
+    "reviewed_by": "amy"
+  },
+  {
+    ...
+  },
+]
+
+```
+
+## Create a review for a single book
+
+Requires authentication.
+
+### request
+
+```txt
+POST api/books/{id}/reviews
+
+ {
+  "body": "This is the best book ever."
+ }
+
+```
+
+### response
+
+```json
+201 Created
+
+{
+  "pk": 3,
+  "body": "This is the best book ever.",
+  "book": "The Countess of Pembroke's Arcadia",
+  "reviewed_by": "belletrix"
+}
+
 ```
