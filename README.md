@@ -10,7 +10,7 @@ Users can mark a book as “want to read”, “reading”, or “read/done”.
 
 Users can also write reviews on books, which should be viewable to all users. Optionally, users can take private notes on books.
 
-**All requests require authentication**.
+**All requests, except registration and log in, require authentication**.
 
 ## Required Headers
 
@@ -18,16 +18,44 @@ Requests to endpoints requiring authentication should set the `Authorization` he
 
 POST requests with a body should set the `Content-Type` header to `application/json`.
 
+## Register a new user
+
+### request
+
+Username and password are required.
+
+```json
+POST api/auth/users
+
+{
+  "username": "baby_yoda",
+  "password": "grogu"
+}
+```
+
+### response
+
+```json
+201 Created
+
+{
+  "email": "",
+  "username": "baby_yoda",
+  "id": 6
+}
+
+```
+
 ## Log In
 
 ### request
 
-```txt
+```json
 POST auth/login
 
 {
-	"username": "admin",
-	"password": "admin"
+  "username": "admin",
+  "password": "admin"
 }
 ```
 
@@ -164,7 +192,7 @@ Requires authentication. Available only to admin users.
 
 ### request
 
-```txt
+```json
 
 PATCH api/books/{id}
 
@@ -223,7 +251,7 @@ Requires authentication.
 
 ### request
 
-```txt
+```json
 POST api/books/{id}/reviews
 
  {
