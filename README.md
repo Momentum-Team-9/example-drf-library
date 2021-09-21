@@ -273,3 +273,61 @@ POST api/books/{id}/reviews
 }
 
 ```
+
+## Search books by title and review
+
+Searches title field of books and body of reviews. Returns matching book objects.
+
+Include query parameter `search` with the keyword(s) that you want to search for. Requires authentication.
+
+### request
+
+```json
+
+GET api/books?search=hope
+```
+
+### response
+
+```json
+[
+  {
+    "pk": 4,
+    "title": "Sense and Sensibility",
+    "author": "Jane Austen",
+    "featured": true
+  },
+  {
+    "pk": 1,
+    "title": "Paradise Lost",
+    "author": "John Milton",
+    "featured": true
+  }
+]
+```
+
+## Search book reviews
+
+Searches the body of book reviews and returns matching book review objects.
+
+Include query parameter `search` with the keyword(s) that you want to search for. Requires authentication.
+
+### request
+
+```json
+GET api/books/1/reviews?search=hope
+```
+### response
+
+```json
+200 OK
+
+[
+  {
+    "pk": 12,
+    "body": "Underground chapel drive blue devils bouncing bulldogs, seventy duke forest. Corcoran urban farmer big green wall coworking artwalk coffee history hub, foodie main street full frame watts beer, rtp brewery marry durham cupcakes angier drive. Biker bar lemur center durham divas rigsbee university sodu oprah building, artwalk five points seeds vintage subaru five points rigsbee, bull durham sodu subaru hope valley bowtie.",
+    "book": "Paradise Lost",
+    "reviewed_by": "a_user"
+  }
+]
+```
