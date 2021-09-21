@@ -1,3 +1,4 @@
+from django.contrib.postgres.search import SearchVector
 from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import action
@@ -38,6 +39,16 @@ class BookViewSet(ModelViewSet):
         serializer = self.get_serializer(featured_books, many=True)
         return Response(serializer.data)
 
+    def get_queryset(self):
+        if self.request.query_params.get("search"):
+            breakpoint()
+            search_term = self.request.query_params.get("search")
+            queryset = Book.objects.annotate(
+                search=SearchVector("title", "reviews__body")
+            ).filter(search=search_term)
+            return queryset
+        return super().get_queryset()
+
 
 class BookRecordViewSet(ModelViewSet):
     queryset = BookRecord.objects.all()
@@ -61,11 +72,14 @@ class BookReviewListCreateView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        book = get_object_or_404(
-            Book,
-            pk=self.kwargs["book_pk"],
-        )
-        return book.reviews.all()
+        queryset = BookReview.objects.filter(book_id=self.kwargs["book_pk"])
+        search_term = self.request.query_params.get("search")
+        if search_term is not None:
+            queryset = queryset.filter(
+                body__search=self.request.query_params.get("search")
+            )
+
+        return queryset
 
     def perform_create(self, serializer, **kwargs):
         book = get_object_or_404(Book, pk=self.kwargs["book_pk"])
