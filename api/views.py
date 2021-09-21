@@ -41,7 +41,6 @@ class BookViewSet(ModelViewSet):
 
     def get_queryset(self):
         if self.request.query_params.get("search"):
-            breakpoint()
             search_term = self.request.query_params.get("search")
             queryset = Book.objects.annotate(
                 search=SearchVector("title", "reviews__body")
