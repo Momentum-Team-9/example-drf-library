@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import environ
 import django_on_heroku
+from corsheaders.defaults import default_headers
 
 env = environ.Env(
     # set casting, default value
@@ -165,6 +166,9 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "content-disposition",
+]
 
 # AWS Config
 if env("USE_S3"):
